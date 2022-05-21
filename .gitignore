@@ -1,3 +1,7 @@
+#py repo
+sentiment-analyzer-uk/
+model.ftz
+
 # Logs
 logs
 *.log

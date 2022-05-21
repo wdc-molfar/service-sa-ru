@@ -1,0 +1,35 @@
+{
+  "name": "service-sa-ru",
+  "version": "1.0.0",
+  "description": "russian Sentiment Analizer as @molfar service",
+  "main": "service.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node ./build/build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wdc-molfar/service-sa-ru.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wdc-molfar/service-sa-ru/issues"
+  },
+  "homepage": "https://github.com/wdc-molfar/service-sa-ru#readme",
+  "dependencies": {
+    "@molfar/py-bridge": "github:wdc-molfar/py-bridge",
+    "@molfar/service-chassis": "github:wdc-molfar/service-chassis",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "axios": "^0.27.2",
+    "execa": "^4.1.0",
+    "fs-extra": "^10.1.0"
+  },
+  "sentimentAnalysis": {
+    "lang": "ru",
+    "repo": "https://github.com/wdc-molfar/sentiment-analyser-ru.git",
+    "modelUrl": "https://drive.google.com/u/0/uc?id=1LnjYOiMylQt3OcNPL3J2EFkfHCC0rQzL&export=download&confirm=t"
+  }
+}
