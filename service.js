@@ -21,7 +21,7 @@ const serviceSetup = require(path.resolve(__dirname,"./package.json")).sentiment
      encoding: 'utf8',
      pythonOptions: ['-u'],
      pythonPath: (process.env.NODE_ENV && process.env.NODE_ENV == "production") ? 'python' : 'python.exe',
-     pythonScript: path.resolve(__dirname,"../python/main.py"),
+     pythonScript: path.resolve(__dirname,"./src/python/main.py"),
      args: path.resolve(__dirname,"./model.ftz")
  }
  const analyser = new SentimentAnalyzer(config)
@@ -68,7 +68,7 @@ let service = new ServiceWrapper({
                         }
                     )
                     this.publisher.send(m)
-                    console.log(`${ this.config._instance_name || this.config._instance_id} recognize sentiments `, m.md5, `${res} `)
+                    console.log(`${ this.config._instance_name || this.config._instance_id} recognize sentiments `, m.md5, `${JSON.stringify(res.data)} `)
                     msg.ack()
                 }    
                 catch(e){

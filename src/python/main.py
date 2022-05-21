@@ -29,14 +29,21 @@ def main(input_json):
     else:
         emotion = "unrecognised"
     
+    # return {
+    #             "emotion": emotion,
+    #             "classes": {
+    #                 "__label__pos": float(predict[1][0]),
+    #                 "__label__neg": float(predict[1][1])
+    #             }
+    #         }
+
     return {
                 "emotion": emotion,
                 "classes": {
-                    "__label__pos": float(predict[1][0]),
-                    "__label__neg": float(predict[1][1])
+                    predict[0][0]: float(predict[1][0]),
+                    predict[0][1]: float(predict[1][1])
                 }
             }
-
     
 
 
