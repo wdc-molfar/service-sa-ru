@@ -24,7 +24,8 @@ const serviceSetup = require(path.resolve(__dirname,"./package.json")).sentiment
      pythonScript: path.resolve(__dirname,"./src/python/main.py"),
      args: path.resolve(__dirname,"./model.ftz")
  }
- const analyser = new SentimentAnalyzer(config)
+
+const analyser = new SentimentAnalyzer(config)
 
 analyser.start()
 
@@ -37,21 +38,26 @@ let service = new ServiceWrapper({
     async onConfigure(config, resolve) {
         this.config = config
 
-        console.log(`configure ${ this.config._instance_name || this.config._instance_id}`)
-
         this.consumer = await AmqpManager.createConsumer(this.config.service.consume)
         await this.consumer.use([
             Middlewares.Json.parse,
             Middlewares.Schema.validator(this.config.service.consume.message),
             Middlewares.Error.Log,
             Middlewares.Error.BreakChain,
+
+            async (err, msg, next) => {
+                console.log("CONSUME", msg.content)
+                next()
+            },
             
             Middlewares.Filter( msg =>  {
                 if( msg.content.metadata.nlp.language.locale != serviceSetup.lang) {
-                    console.log(`${ this.config._instance_name || this.config._instance_id} ignore `, msg.content.md5, msg.content.metadata.nlp.language.locale)
+                    console.log(`IGNORE`, msg.content.langDetector.language.locale)
                     msg.ack()
-                } 
-                return msg.content.metadata.nlp.language.locale == serviceSetup.lang
+                } else {
+                    console.log(`ACCEPT`, msg.content.langDetector.language.locale)
+                }
+                return  msg.content.langDetector.language.locale == serviceSetup.lang
             }),
 
             async (err, msg, next) => {
@@ -59,20 +65,19 @@ let service = new ServiceWrapper({
                     let m = msg.content
                     
                     let res = await analyser.getSentiments({
-                        text: m.metadata.text.replace(/\n+/g," ")
+                        text: m.scraper.message.text.replace(/\n+/g," ")
                     })
                     
-                    m.metadata.nlp = extend({}, m.metadata.nlp, 
-                        {
+                    m = extend({}, m, {
                             sentiments: res.data
                         }
                     )
                     this.publisher.send(m)
-                    console.log(`${ this.config._instance_name || this.config._instance_id} recognize sentiments `, m.md5, `${JSON.stringify(res.data)} `)
+                    console.log("RECOGNIZE SENTIMENTS", res )
                     msg.ack()
                 }    
                 catch(e){
-                    console.log("ERROR", e)
+                    console.log("ERROR", e.toString())
                 }    
             }
 
@@ -94,13 +99,11 @@ let service = new ServiceWrapper({
     },
 
     onStart(data, resolve) {
-        console.log(`start ${ this.config._instance_name || this.config._instance_id}`)
         this.consumer.start()
         resolve({ status: "started" })
     },
 
     async onStop(data, resolve) {
-        console.log(`stop ${ this.config._instance_name || this.config._instance_id}`)
         await this.consumer.close()
         await this.publisher.close()
         resolve({ status: "stoped" })
