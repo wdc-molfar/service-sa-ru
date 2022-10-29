@@ -104,7 +104,7 @@ service:
             url: "amqps://xoilebqg:Nx46t4t9cxQ2M0rF2rIyZPS_xbAhmJIG@hornet.rmq.cloudamqp.com/xoilebqg"
         
         queue:
-            name: ner-uk
+            name: ner-ru
             exchange:
                 name: ner
                 
