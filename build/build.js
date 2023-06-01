@@ -30,7 +30,7 @@ const run = async () => {
 
 	await ( async () =>{
 		try {
-			const {stdout} = execa("pip", `install -r ${path.resolve("./requirements.txt")}`.split(" "))
+			const {stdout} = execa("pip3", `install -r ${path.resolve("./requirements.txt")}`.split(" "))
 			stdout.pipe(process.stdout)
 		} catch(error) {
 			console.log(error)

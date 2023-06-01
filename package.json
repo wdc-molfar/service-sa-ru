@@ -4,6 +4,7 @@
   "description": "russian Sentiment Analizer as @molfar service",
   "main": "service.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node ./build/build"
   },
@@ -20,9 +21,7 @@
   "dependencies": {
     "@molfar/py-bridge": "github:wdc-molfar/py-bridge",
     "@molfar/service-chassis": "github:wdc-molfar/service-chassis",
-    "lodash": "^4.17.21"
-  },
-  "devDependencies": {
+    "lodash": "^4.17.21",
     "axios": "^0.27.2",
     "execa": "^4.1.0",
     "fs-extra": "^10.1.0"
